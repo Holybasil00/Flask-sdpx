@@ -1,13 +1,32 @@
 pipeline{
     agent any
     stages{
-       stage("Hello World"){
+       stage("test"){
         agent {
             label 'test'
         }
         steps{
-            sh 'echo "Hello World"'
+            sh 'docker-compose -f docker-compose.yml up -d --build'
         }
+        
+       }
+       stage("build"){
+        agent {
+            label 'test'
+        }
+        steps{
+            sh 'robot test.robot'
+        }
+        
+       }
+       stage("deploy"){
+        agent {
+            label 'test'
+        }
+        steps{
+            sh 'echo "deploying"'
+        }
+        
        }
     }
 }

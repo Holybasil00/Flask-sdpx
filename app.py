@@ -22,9 +22,9 @@ mysql = MySQL()
 mysql.init_app(app)
 
 
-@app.route('/')
+@app.route('/test')
 def hello_world():
-    return os.getenv('MYSQL_DB_HOST')
+    return "test"
 
 
 @app.route('/users', methods=['GET'])
