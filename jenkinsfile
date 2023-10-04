@@ -1,37 +1,57 @@
 pipeline{
-    agent any
+    agent any 
     stages{
-       stage("test"){
-        agent {
-            label 'test'
+        stage('clone'){
+            agent {
+                label 'test'
+            }
+            step {
+                echo 'building the project'
+                sh 'pip install -r requirements.txt'
+            }
+        stage('build'){
+            agent {
+                label 'test'
+            }
+            steps{
+                echo 'building the project'
+                sh 'touch dev.env'
+                sh 'echo "MYSQL_DB_USER = admin" >> dev.env'
+                sh 'echo "MYSQL_DB_PASSWORD = db4dev$" >> dev.env'
+                sh 'echo "MYSQL_DB_DB = Spdxbd" >> dev.env'
+                sh 'echo "MYSQL_DB_HOST = 10.5.0.5/3307" >> dev.env'
+                sh 'docker-compose -f docker-compose-dev.yml up -d --build' 
+            }
         }
-        steps{
-            sh 'touch dev.env'
-            sh 'echo "MYSQL_DB_USER = admin" >> dev.env'
-            sh 'echo "MYSQL_DB_PASSWORD = db4dev$" >> dev.env'
-            sh 'echo "MYSQL_DB_DB = Sdpxdb" >> dev.env'
-            sh 'echo "MYSQL_DB_HOST = 10.5.0.5/3307" >> dev.env'
-            sh 'docker-compose -f docker-compose.yml up -d --build'
+        stage('test'){
+            agent {
+                label 'test'
+            }
+            steps{
+                echo 'testing the project'
+                sh 'python3 -m unittest discover -s , -p test*.py -v'
+                sh 'robot test.robot'
+            }
         }
-        
-       }
-       stage("build"){
-        agent {
-            label 'test'
+        stage('push')
+        {
+            agent {
+                label 'test'
+            }
+            steps{
+                echo 'pushing the project'
+                sh 'docker build -t registry.gitlab.com/test7072540/test01 .'
+                sh 'docker push registry.gitlab.com/test7072540/test01' 
+            }
+        stage('pull'){
+            agent {
+                label 'pre-prod'
+            }
+            steps{
+                echo 'pulling the project'
+                sh 'docker pull registry.gitlab.com/test7072540/test01'
+                sh 'docker run -d -p 5000:5000 registry.gitlab.com/test7072540/test01'
+            }
         }
-        steps{
-            sh 'robot test.robot'
-        }
-        
-       }
-       stage("deploy"){
-        agent {
-            label 'test'
-        }
-        steps{
-            sh 'echo "deploying"'
-        }
-        
-       }
-    }
+    
 }
