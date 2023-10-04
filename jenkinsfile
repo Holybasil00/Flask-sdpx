@@ -21,7 +21,7 @@ pipeline{
                 sh 'echo "MYSQL_DB_PASSWORD = db4dev$" >> dev.env'
                 sh 'echo "MYSQL_DB_DB = Spdxbd" >> dev.env'
                 sh 'echo "MYSQL_DB_HOST = 10.5.0.5/3307" >> dev.env'
-                sh 'docker-compose -f docker-compose-dev.yml up -d --build' 
+                sh 'docker-compose -f docker-compose.yml up -d --build' 
             }
         }
         stage('test'){
