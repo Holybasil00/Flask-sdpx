@@ -9,6 +9,7 @@ pipeline{
                 echo 'building the project'
                 sh 'pip install -r requirements.txt'
             }
+        }
         stage('build'){
             agent {
                 label 'test'
@@ -43,6 +44,7 @@ pipeline{
                 sh 'docker build -t registry.gitlab.com/test7072540/test01 .'
                 sh 'docker push registry.gitlab.com/test7072540/test01' 
             }
+        }
         stage('pull'){
             agent {
                 label 'pre-prod'
@@ -54,7 +56,5 @@ pipeline{
             }
         }
     
-}
-}
 }
 }
