@@ -5,7 +5,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - "8081:5000"
+      - "8082:5000"
     environment:
       - FLASK_ENV=production
       - FLASK_APP=app.py
@@ -20,7 +20,7 @@ services:
   db-prod:
     image: mysql:latest
     ports:
-      - "3307:3306"
+      - "3308:3306"
     volumes:
       - /Users/earthzaza/Desktop/earthwork/test-flask/DB_DEV:/var/lib/mysql
     environment:
